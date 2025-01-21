@@ -12,7 +12,7 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin: "http://localhost:5174", 
+  origin: "http://localhost:5175", 
   methods: ["GET", "POST"],
   credentials: true,
 };
@@ -28,7 +28,7 @@ const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5174", 
+    origin: "http://localhost:5175", 
     methods: ["GET", "POST"],
     credentials: true,
   },
