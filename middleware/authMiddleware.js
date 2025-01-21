@@ -2,11 +2,15 @@ const jwt = require('jsonwebtoken');
 
 
 const protect = async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
-    
-  }
+  // let token;
+  // if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+  //   token = req.headers.authorization.split(" ")[1];
+
+  // }
+
+  let token = req.cookies.token;
+  console.log(token);
+
 
   if (!token) {
     return res.status(401).json({ message: "No token, authorization denied" });
@@ -18,7 +22,7 @@ const protect = async (req, res, next) => {
     if (!req.user) throw new Error("User not found");
     next();
   } catch (err) {
-    res.status(401).json({ message: "Token is not valid" });
+    res.status(401).json({ message: "Token is not valid", error: err.message });
   }
 };
 
