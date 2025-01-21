@@ -3,16 +3,18 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./src/routes/auth');
 const fileRoutes = require('./src/routes/files');
+const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv');
-const http = require('http'); 
+const http = require('http');
 const socketIo = require('socket.io');
 dotenv.config();
 
 const app = express();
 connectDB();
 
+app.use(cookieParser())
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, 
+  origin: process.env.FRONTEND_URL,
   methods: ["GET", "POST"],
   credentials: true,
 };
@@ -28,7 +30,7 @@ const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL, 
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"],
     credentials: true,
   },
