@@ -5,11 +5,11 @@ const bcrypt = require("bcryptjs");
 const protect = require("../../middleware/authMiddleware");
 const router = express.Router();
 
-// Registration Route
+
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10); 
     const user = await User.create({ username, email, password: hashedPassword });
     res.status(201).json(user);
   } catch (err) {
