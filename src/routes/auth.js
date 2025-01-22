@@ -1,22 +1,24 @@
-const express = require("express");
-const User = require("../models/User.js");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const protect = require("../../middleware/authMiddleware");
-const router = express.Router();
-
+import { Router } from "express";
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import protect from "../../middleware/authMiddleware.js";
+const router = Router();
 
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashedPassword });
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
-
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -25,14 +27,19 @@ router.post("/login", async (req, res) => {
     if (!user) return res.status(400).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // console.log("token created", token);
 
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: true, 
+         secure:true,
         sameSite: "strict",
         maxAge: 3600000,
       })
@@ -45,6 +52,7 @@ router.post("/login", async (req, res) => {
     // console.log(token);
     // res.json({ token });
   } catch (err) {
+    console.log("error message", err.message);
     res.status(500).json({ message: err.message });
   }
 });
@@ -61,4 +69,4 @@ router.get("/me", protect, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

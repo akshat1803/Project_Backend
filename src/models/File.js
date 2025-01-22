@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const FileSchema = new mongoose.Schema({
+const FileSchema = new Schema({
   filename: { type: String, required: true },
   filepath: { type: String, required: true },
-  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+  uploadedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  assignedTo: { type: Schema.Types.ObjectId, ref: 'User', required: false },
   uploadedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('File', FileSchema);
+export default model('File', FileSchema);
 
