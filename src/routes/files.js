@@ -22,6 +22,7 @@ const upload = multer({
 
 router.post("/upload", protect, upload.single("file"), async (req, res) => {
   try {
+    console.log("req.file", req.file);
     const file = await File.create({
       filename: req.file.filename,
       filepath: req.file.path,
@@ -29,6 +30,7 @@ router.post("/upload", protect, upload.single("file"), async (req, res) => {
     });
     res.status(201).json(file);
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: err.message });
   }
 });
