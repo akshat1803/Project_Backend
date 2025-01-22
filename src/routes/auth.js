@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-         secure:true,
+        secure: process.env.NODE_ENV="production",
         sameSite: "strict",
         maxAge: 3600000,
       })
@@ -48,9 +48,9 @@ router.post("/login", async (req, res) => {
         message: "Login Successful",
       });
     return true;
+    res.json({ token });
 
-    // console.log(token);
-    // res.json({ token });
+    console.log(token);
   } catch (err) {
     console.log("error message", err.message);
     res.status(500).json({ message: err.message });
