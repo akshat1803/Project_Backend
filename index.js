@@ -1,18 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const authRoutes = require('./src/routes/auth');
-const fileRoutes = require('./src/routes/files');
-const cookieParser = require('cookie-parser')
-const dotenv = require('dotenv');
-const http = require('http');
-const socketIo = require('socket.io');
-dotenv.config();
+import express from "express";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import authRoutes from "./src/routes/auth.js";
+import fileRoutes from "./src/routes/files.js";
+import cookieParser from "cookie-parser";
+import "dotenv/config";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const app = express();
 connectDB();
 
-app.use(cookieParser())
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   methods: ["GET", "POST"],
@@ -20,18 +18,18 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(cookieParser());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/files', fileRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/files", fileRoutes);
 
-const server = http.createServer(app);
+const server = createServer(app);
 
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
 });

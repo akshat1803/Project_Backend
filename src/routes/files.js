@@ -1,24 +1,26 @@
-const express = require('express');
-const multer = require('multer');
-const File = require('../models/File');
+import express from "express";
+import multer from "multer";
+import File from "../models/File.js";
 
-const protect = require('../../middleware/authMiddleware');
+// const protect = require("../../middleware/authMiddleware").default;
+import protect from "../../middleware/authMiddleware.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
+  destination: (req, file, cb) => cb(null, "uploads/"),
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'application/x-msdownload') return cb(new Error('Executable files are not allowed'));
+    if (file.mimetype === "application/x-msdownload")
+      return cb(new Error("Executable files are not allowed"));
     cb(null, true);
   },
 });
 
-router.post('/upload', protect, upload.single('file'), async (req, res) => {
+router.post("/upload", protect, upload.single("file"), async (req, res) => {
   try {
     const file = await File.create({
       filename: req.file.filename,
@@ -31,4 +33,4 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
